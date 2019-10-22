@@ -8,7 +8,7 @@ $app->get('/session', function() {
     echoResponse(200, $session);
 });
 
-$app->post('/login', function() use ($app) {
+$app->post('/login/insert', function() use ($app) {
     require_once 'passwordHash.php';
     $r = json_decode($app->request->getBody());
     verifyRequiredParams(array('email', 'password'),$r->customer);
@@ -16,7 +16,7 @@ $app->post('/login', function() use ($app) {
     $db = new DbHandler();
     $password = $r->customer->password;
     $email = $r->customer->email;
-    $user = $db->getOneRecord("select uid,name,password,email,created from customers_auth where phone='$email' or email='$email'");
+    $user = $db->getOneRecord("select * from customers_auth where phone='$email' or email='$email'");
     if ($user != NULL) {
         if(passwordHash::check_password($user['password'],$password)){
         $response['status'] = "success";
@@ -24,6 +24,7 @@ $app->post('/login', function() use ($app) {
         $response['name'] = $user['name'];
         $response['uid'] = $user['uid'];
         $response['email'] = $user['email'];
+        $response['phone'] = $user['phone'];
         $response['createdAt'] = $user['created'];
         if (!isset($_SESSION)) {
             session_start();
@@ -31,6 +32,7 @@ $app->post('/login', function() use ($app) {
         $_SESSION['uid'] = $user['uid'];
         $_SESSION['email'] = $email;
         $_SESSION['name'] = $user['name'];
+        $_SESSION['phone'] = $user['phone'];
         } else {
             $response['status'] = "error";
             $response['message'] = 'La connexion a échoué. :/';
@@ -51,6 +53,7 @@ $app->post('/signUp', function() use ($app) {
     $name = $r->customer->name;
     $email = $r->customer->email;
     $address = $r->customer->address;
+    $city = $r->customer->city;
     $password = $r->customer->password;
     $isUserExists = $db->getOneRecord("select 1 from customers_auth where phone='$phone' or email='$email'");
     if(!$isUserExists){
@@ -88,4 +91,11 @@ $app->get('/logout', function() {
     $response["message"] = "Déconnexion réalisée avec succés";
     echoResponse(200, $response);
 });
+// $app->put('/login/update', function() {
+//     $db = new DbHandler();
+//     $session = $db->update();
+//     $response["status"] = "info";
+//     $response["message"] = "Déconnexion réalisée avec succés";
+//     echoResponse(200, $response);
+// });
 ?>

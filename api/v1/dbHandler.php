@@ -20,8 +20,7 @@ class DbHandler {
     /**
      * Creating new record
      */
-    public function insertIntoTable($obj, $column_names, $table_name) {
-        
+    public function insertIntoTable($obj, $column_names, $table_name) {  
         $c = (array) $obj;
         $keys = array_keys($c);
         $columns = '';
@@ -55,6 +54,7 @@ public function getSession(){
         $sess["uid"] = $_SESSION['uid'];
         $sess["name"] = $_SESSION['name'];
         $sess["email"] = $_SESSION['email'];
+        $sess["phone"] = $_SESSION['phone'];
     }
     else
     {
@@ -78,11 +78,11 @@ public function destroySession(){
         {
             setcookie ($info, '', time() - $cookie_time);
         }
-        $msg="Logged Out Successfully...";
+        $msg="Vous n'êtes plus authentifié...";
     }
     else
     {
-        $msg = "Not logged in...";
+        $msg = "Vous n'êtes pas authentifié";
     }
     return $msg;
 }

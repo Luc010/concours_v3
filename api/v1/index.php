@@ -32,7 +32,7 @@ function verifyRequiredParams($required_fields,$request_params) {
         $response = array();
         $app = \Slim\Slim::getInstance();
         $response["status"] = "error";
-        $response["message"] = 'Required field(s) ' . substr($error_fields, 0, -2) . ' is missing or empty';
+        $response["message"] = 'Champs requis ' . substr($error_fields, 0, -2) . ' sont manquants ou vide';
         echoResponse(200, $response);
         $app->stop();
     }
